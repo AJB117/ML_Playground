@@ -53,11 +53,11 @@ def update_weights(in_slope, in_bias, dataset, learning_rate):
 
 def train(slope, bias, dataset, learning_rate, iterations):
     for i in range(iterations):
-       slope,bias = update_weights(slope, bias, dataset, learning_rate)
-    return slope,bias
+       slope, bias = update_weights(slope, bias, dataset, learning_rate)
+    return slope, bias, iterations
 
 
-slope,bias = train(rand_slope, rand_bias, data, 0.001, 5000)
+slope, bias, iterations = train(rand_slope, rand_bias, data, 0.001, 5000)
 
 # Regression
 plt.figure(1)
@@ -74,6 +74,6 @@ plt.plot(T, Y, 'g-')
 plt.figure(2)
 plt.ylabel("Cost")
 plt.xlabel("Iterations")
-plt.axis([0,50000, 0, 3])
+plt.axis([0,iterations, 0, 3])
 plt.plot(cost_history, 'r-')
 plt.show()
