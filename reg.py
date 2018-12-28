@@ -18,8 +18,8 @@ data = [[2, 1],
 
 
 # Initialize random weights
-rand_slope = np.random.randint(0, 1)
-rand_bias = np.random.randint(0, 1)
+rand_slope = np.random.uniform(low=0, high=1, size=None)
+rand_bias = np.random.uniform(low=0, high=1, size=None)
 cost_history = []
 
 def cost(input_data, slope, bias):
