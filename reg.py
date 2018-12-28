@@ -54,7 +54,6 @@ def update_weights(in_slope, in_bias, dataset, learning_rate):
 def train(slope, bias, dataset, learning_rate, iterations):
     for i in range(iterations):
        slope,bias = update_weights(slope, bias, dataset, learning_rate)
-       c = cost(dataset, slope, bias)
     return slope,bias
 
 
