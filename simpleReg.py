@@ -1,79 +1,65 @@
 # Linear regression
 
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Sample data in x,y pairs
-data = [[2, 1],
- [3, 1],
- [2, 0.5],
- [1, 1],
- [3, 1.5],
- [3.5, 0.5],
- [4, 1.5],
- [5.5, 1],
- [4.5, 2],
- [5, 0.5]
- ]
+colnames = ['inputs', 'targets']
+data = pd.read_csv('random_pairs.csv', names=colnames)
 
+inputs = list(map(lambda d: d, data['inputs']))
+targets = list(map(lambda d: d, data['targets']))
 
-# Initialize random weights
-rand_slope = np.random.uniform(low=0, high=1, size=None)
-rand_bias = np.random.uniform(low=0, high=1, size=None)
+w1 = np.random.uniform(low=0, high=1, size=None)
+b = np.random.uniform(low=0, high=1, size=None)
 cost_history = []
 
-def cost(input_data, slope, bias):
-    data_size = len(input_data)
-    total_cost = 0
-    for i in range(data_size):
-        total_cost += (input_data[i][1] - (slope*input_data[i][0] + bias))**2
-    return total_cost/data_size
 
-def update_weights(in_slope, in_bias, dataset, learning_rate):
-    d_cost_d_slope = 0
-    d_cost_d_bias = 0
-    data_size = len(dataset)
-
-    # Calculate partials
-    # -2x(y - (mx + b))
-    for i in range(data_size):
-        cost = (dataset[i][1] - (in_slope * dataset[i][0] + in_bias)) ** 2
-        cost_history.append(cost)
-        # Calculate partial derivatives
-        # -2x_i(y_i - (mx_i + b))
-        d_cost_d_slope += -2 * dataset[i][0] * (dataset[i][1] - (in_slope * dataset[i][0] + in_bias))
-
-        # -2(y_i - (mx_i + b))
-        d_cost_d_bias += -2 * (dataset[i][1] - (in_slope * dataset[i][0] + in_bias))
-    in_slope -= (d_cost_d_slope / data_size) * learning_rate
-    in_bias -= (d_cost_d_bias / data_size) * learning_rate
-
-    return in_slope, in_bias
+def cost(x, y, weight, bias):
+    total_error = 0.0
+    total_error = (total_error + ((y - (weight*x+bias)) ** 2))/100
+    return total_error
 
 
-def train(slope, bias, dataset, learning_rate, iterations):
+def update_weights(ins, targets, weight, bias, learning_rate):
+    weight_gradient = 0
+    bias_gradient = 0
+    for i in range(len(ins)):
+        c = cost(inputs[i], targets[i], weight, bias)
+        cost_history.append(c)
+        weight_gradient += -2 * ins[i]*(targets[i]-(weight * ins[i] + bias))
+        bias_gradient += -2 * (targets[i]-(weight * ins[i] + bias))
+
+    weight -= (weight_gradient/len(ins)) * learning_rate
+    bias -= (bias_gradient/len(ins)) * learning_rate
+
+    return weight, bias
+
+
+def train(ins, targets, weight, bias, learning_rate, iterations):
     for i in range(iterations):
-       slope, bias = update_weights(slope, bias, dataset, learning_rate)
-    return slope, bias, iterations
+        weight, bias = update_weights(ins, targets, weight, bias, learning_rate)
+    return weight, bias, iterations
 
 
-slope, bias, iterations = train(rand_slope, rand_bias, data, 0.001, 5000)
+weight, bias, iterations = train(inputs, targets, w1, b, 0.0001, 80000)
+print(weight, bias)
 
-# Regression
+
 plt.figure(1)
-plt.plot(list(map(lambda d: d[0], data)), list(map(lambda d: d[1], data)), 'bo')
-plt.axis([0,5,0,6])
-plt.ylabel("y")
-plt.xlabel("x")
-axes = plt.gca()
-T = np.linspace(0, 500, 1100)
-Y = bias + (slope * T)
-plt.plot(T, Y, 'g-')
-
-# Cost
-plt.figure(2)
-plt.ylabel("Cost")
-plt.xlabel("Iterations")
-plt.axis([0, iterations, 0, 3])
+plt.axis((0, iterations, 0, 100))
+plt.suptitle('Cost over time')
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
 plt.plot(cost_history, 'r-')
+
+plt.figure(2)
+plt.axis((0, 110, 0, 150))
+plt.figure(2)
+plt.xlabel('Mock x')
+plt.ylabel('Mock y')
+plt.plot(inputs, targets, "b.")
+x = np.linspace(0, 100, 1000)
+Y = bias + (weight * x)
+plt.plot(x, Y, 'g-')
 plt.show()
