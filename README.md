@@ -1,3 +1,3 @@
 # linearRegressor
 
-Simple linear regressor programs that use machine learning.
+Simple linear regressor programs. MSQE and SGD. Single layer.
