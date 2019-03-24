@@ -1,3 +1,3 @@
-# linearRegressor
+# ML Playground
 
-Simple linear regressor programs. MSQE and SGD. Single layer.
+Writing ML algos from scratch for fun!
